@@ -59,6 +59,7 @@ var city: City = cities[0];
 var count: u8 = 1;
 const maxRounds: u8 = 3;
 var frameCount: u64 = 0;
+var distance: f32 = 0;
 
 export fn start() void {
     city = cities[@mod(rnd.random().int(usize), cities.len)];
@@ -109,14 +110,14 @@ export fn update() void {
     const pressed_this_frame = gamepad & (gamepad ^ previous_gamepad);
     previous_gamepad = gamepad;
 
-    const distance = std.math.sqrt(@intToFloat(f32, std.math.pow(i32, targetX - city.x, 2) + std.math.pow(i32, targetY + targetOffsetY - city.y, 2))) * (1800 / map.vn_new_height);
     if (pressed_this_frame & w4.BUTTON_1 != 0) {
         if (mode == Mode.select) {
             mode = Mode.selected;
-            score += distance;
             targetX = positionX;
             targetY = positionY;
             targetOffsetY = offsetY;
+            distance = std.math.sqrt(@intToFloat(f32, std.math.pow(i32, targetX - city.x, 2) + std.math.pow(i32, targetY + targetOffsetY - city.y, 2))) * (1800 / map.vn_new_height);
+            score += distance;
         } else if (mode == Mode.selected) {
             mode = Mode.select;
             count += 1;
